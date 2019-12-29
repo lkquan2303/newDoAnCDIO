@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".DangNhap">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="106dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="45dp"
+            android:src="@drawable/paint_bg" />
+        <TextView
+            android:layout_width="296dp"
+            android:layout_marginTop="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="DẠY BÉ TẬP TÔ"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
+
+        <EditText
+            android:id="@+id/edemail"
+            android:textColor="@color/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/text"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Email đăng nhập"
+            android:inputType="textPersonName"
+            android:textColorHint="@color/text"
+            android:textStyle="italic" />
+
+        <EditText
+            android:id="@+id/edmk"
+            android:textColor="@color/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/text"
+            android:drawableLeft="@drawable/lock"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Mật khẩu"
+            android:inputType="textPassword"
+            android:textColorHint="@color/text"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/btndangnhap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@color/bg_button"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/background"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="Đăng nhập"
+            android:textColor="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="Hoặc"
+                android:textColor="@color/bg_button"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btdngoogle"
+            android:layout_marginTop="30dp"
+            android:background="@color/bg_button"
+            android:drawableLeft="@drawable/icon_google"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:text="Đăng nhập bằng Google"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btdnfb1"
+            android:drawableLeft="@drawable/icon_facebook"
+            android:paddingLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:textColor="#FFFFFF"
+            android:background="@color/bg_button"
+            android:textAllCaps="false"
+            android:text="Đăng nhập bằng FaceBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvqmk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Quên mật khẩu?"
+                android:textColor="@color/bg_button"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvdkm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:text="Đăng ký mới"
+                android:textColor="@color/bg_button"
+                android:textSize="16sp"
+                android:gravity="end" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

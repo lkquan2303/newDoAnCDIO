@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.doantichhop_cdio_moi.MainActivity.MainActivity">
+    <item
+        android:id="@+id/action_open"
+        android:orderInCategory="100"
+        android:title="Mở"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="101"
+        android:title="Lưu"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_dx"
+        android:orderInCategory="101"
+        android:title="Đăng xuất"
+        app:showAsAction="always" />
+
+</menu>

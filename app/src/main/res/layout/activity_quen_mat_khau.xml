@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    tools:context=".QuenMatKhau">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="110dp"
+            android:text="MyApp"
+            android:textColor="@color/white"
+            android:textSize="80sp" />
+        <TextView
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:textStyle="italic"
+            android:layout_width="match_parent"
+            android:text="Nhập email bạn đã đăng ký"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+
+            android:id="@+id/edquenmk"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/white"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Nhập email của bạn tại đây"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/white"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/btkhoiphuc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/radiusbutton"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/background"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="Khôi phục mật khẩu"
+            android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/edfail"
+            android:textStyle="italic"
+            android:textSize="17sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+
+    </LinearLayout>
+</RelativeLayout>

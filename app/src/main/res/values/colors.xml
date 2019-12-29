@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#DDD</color>
+    <color name="bg">#FFFDFD</color>
+    <color name="text">#888</color>
+    <color name="text1">#000000</color>
+    <color name="toolbar">#E384FF</color>
+    <color name="radion">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="tc">#75CE35</color>
+    <color name="background">#21AF2B</color>
+    <color name="black">#030303</color>
+
+    <color name="bg_button">#00bfff</color>
+</resources>

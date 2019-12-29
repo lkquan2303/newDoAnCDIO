@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "478360776091",
+    "firebase_url": "https://newdoantichhopcdio.firebaseio.com",
+    "project_id": "newdoantichhopcdio",
+    "storage_bucket": "newdoantichhopcdio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478360776091:android:906ef1ef1ff52eecbe453e",
+        "android_client_info": {
+          "package_name": "com.example.doantichhop_cdio_moi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478360776091-0r5sksueshe5csotkv9vo3b3hoa182ct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.doantichhop_cdio_moi",
+            "certificate_hash": "ffe82c755d17f098d7d314ea699d745b0e963471"
+          }
+        },
+        {
+          "client_id": "478360776091-amel7hle8qnlcvsfs3a5risra1ma2a8q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZb_I5OF_OzV4_pS0LEfsulahbDv2oLAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478360776091-amel7hle8qnlcvsfs3a5risra1ma2a8q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
