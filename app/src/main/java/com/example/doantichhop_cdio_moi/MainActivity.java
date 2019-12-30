@@ -46,10 +46,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.doantichhop_cdio_moi.Utils.BitmapUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -69,35 +72,40 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
     private static final int CHOOSE_IMAGE = 133;
     final int RQS_IMAGE1 = 1;
     private TextView viewGallery;
     private ImageView imgPreview;
     private EditText imgDescription;
     private EditText id_timkiem;
-
+    Matrix matrix;
     private ProgressBar uploadProgress;
     private DrawingView drawView;
     private float smallBrush, mediumBrush, largeBrush;
     private ImageButton currPaint, drawBtn, eraseBtn;
-    private Uri imgUrl;
     private ImageButton bt_timkiem, img_camera;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
     private Bitmap originalImage, finalImage, bmp, alteredBitmap;
-    Uri source;
+    Uri source,imageFileUri;
+    FirebaseAuth myau;
     public static final int SELECT_GALLERY_IMAGE = 101;
-    static final int REQUEST_IMAGE_CAPTURE = 33;
+    static final int REQUEST_IMAGE_CAPTURE = 33, REQUEST_IMAGE_FIREBASE = 1000;
     static final int FIREBASE_IMAGE = 2;
 
-
-
+    Paint paint;
+    float downx = 0;
+    float downy = 0;
+    float upx = 0;
+    float upy = 0;
     Canvas canvas;
     Bitmap bitmapMaster;
     int prvX, prvY;
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        myau = FirebaseAuth.getInstance();
         smallBrush = getResources().getInteger(R.integer.small_size);
         mediumBrush = getResources().getInteger(R.integer.medium_size);
         largeBrush = getResources().getInteger(R.integer.large_size);
@@ -129,8 +138,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         currPaint = (ImageButton) paintLayout.getChildAt(0);
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String name_storage = firebaseUser.getUid();
+        mStorageRef = FirebaseStorage.getInstance().getReference(name_storage);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(name_storage);
 //        drawView.setBackgroundResource(R.drawable.add);
         viewGallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,34 +164,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
-
-        imgPreview.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                int action = event.getAction();
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        prvX = x;
-                        prvY = y;
-                        drawOnProjectedBitMap((ImageView) v, bitmapMaster, prvX, prvY, x, y);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        drawOnProjectedBitMap((ImageView) v, bitmapMaster, prvX, prvY, x, y);
-                        prvX = x;
-                        prvY = y;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        drawOnProjectedBitMap((ImageView) v, bitmapMaster, prvX, prvY, x, y);
-                        break;
-                }
-
-                return true;
-            }
-        });
+//        imgPreview.setOnTouchListener(this);
+//        imgPreview.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                int action = event.getAction();
+//                int x = (int) event.getX();
+//                int y = (int) event.getY();
+//                switch (action) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        prvX = x;
+//                        prvY = y;
+//                        drawOnProjectedBitMap((ImageView) v, bitmapMaster, prvX, prvY, x, y);
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//                        drawOnProjectedBitMap((ImageView) v, bitmapMaster, prvX, prvY, x, y);
+//                        prvX = x;
+//                        prvY = y;
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        drawOnProjectedBitMap((ImageView) v, bitmapMaster, prvX, prvY, x, y);
+//                        break;
+//                }
+//
+//                return true;
+//            }
+//        });
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -235,36 +247,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 ////        }
 //        else
             if ( requestCode == RQS_IMAGE1 ) {
-                    source = data.getData();
+//                    source = data.getData();
+//                    try {
+//                        //tempBitmap is Immutable bitmap,
+//                        //cannot be passed to Canvas constructor
+//                        tempBitmap = BitmapFactory.decodeStream(
+//                                getContentResolver().openInputStream(source));
+//
+//                        Bitmap.Config config;
+//                        if (tempBitmap.getConfig() != null) {
+//                            config = tempBitmap.getConfig();
+//                        } else {
+//                            config = Bitmap.Config.ARGB_8888;
+//                        }
+//
+//                        //bitmapMaster is Mutable bitmap
+//                        bitmapMaster = Bitmap.createBitmap(
+//                                tempBitmap.getWidth(),
+//                                tempBitmap.getHeight(),
+//                                config);
+//
+//                        canvas = new Canvas(bitmapMaster);
+//                        canvas.drawBitmap(tempBitmap, 0, 0, null);
+//
+//                        imgPreview.setImageBitmap(bitmapMaster);
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+
+
+                if (resultCode == RESULT_OK) {
+                    imageFileUri = data.getData();
                     try {
-                        //tempBitmap is Immutable bitmap,
-                        //cannot be passed to Canvas constructor
-                        tempBitmap = BitmapFactory.decodeStream(
-                                getContentResolver().openInputStream(source));
+                        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+                        bmpFactoryOptions.inJustDecodeBounds = true;
+                        bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(
+                                imageFileUri), null, bmpFactoryOptions);
 
-                        Bitmap.Config config;
-                        if (tempBitmap.getConfig() != null) {
-                            config = tempBitmap.getConfig();
-                        } else {
-                            config = Bitmap.Config.ARGB_8888;
-                        }
+                        bmpFactoryOptions.inJustDecodeBounds = false;
+                        bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(
+                                imageFileUri), null, bmpFactoryOptions);
 
-                        //bitmapMaster is Mutable bitmap
-                        bitmapMaster = Bitmap.createBitmap(
-                                tempBitmap.getWidth(),
-                                tempBitmap.getHeight(),
-                                config);
+                        alteredBitmap = Bitmap.createBitmap(bmp.getWidth(), bmp
+                                .getHeight(), bmp.getConfig());
+                        canvas = new Canvas(alteredBitmap);
+                        paint = new Paint();
+                        paint.setColor(Color.GREEN);
+                        paint.setStrokeWidth(30);
+                        matrix = new Matrix();
+                        canvas.drawBitmap(bmp, matrix, paint);
 
-                        canvas = new Canvas(bitmapMaster);
-                        canvas.drawBitmap(tempBitmap, 0, 0, null);
-
-                        imgPreview.setImageBitmap(bitmapMaster);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        imgPreview.setImageBitmap(alteredBitmap);
+                        imgPreview.setOnTouchListener(this);
+                    } catch (Exception e) {
+                        Log.v("ERROR", e.toString());
                     }
 
-
-
+                }
         }else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
                 final Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -318,9 +357,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void uploadImage() {
-        if (source != null) {
-            final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(source));
-            mUploadTask = fileReference.putFile(source)
+        if (imageFileUri != null) {
+            final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageFileUri));
+            mUploadTask = fileReference.putFile(imageFileUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -370,6 +409,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(URL_Image != null)
         {
             Picasso.with(this).load(URL_Image).into(imgPreview);
+            try {
+                BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+                bmpFactoryOptions.inJustDecodeBounds = true;
+                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(
+                        Uri.parse(URL_Image)), null, bmpFactoryOptions);
+
+                bmpFactoryOptions.inJustDecodeBounds = false;
+                bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(
+                        Uri.parse(URL_Image)), null, bmpFactoryOptions);
+
+                alteredBitmap = Bitmap.createBitmap(bmp.getWidth(), bmp
+                        .getHeight(), bmp.getConfig());
+                canvas = new Canvas(alteredBitmap);
+                paint = new Paint();
+                paint.setColor(Color.GREEN);
+                paint.setStrokeWidth(30);
+                matrix = new Matrix();
+                canvas.drawBitmap(bmp, matrix, paint);
+                imgPreview.setOnTouchListener(this);
+            } catch (Exception e) {
+                Log.v("ERROR", e.toString());
+            }
         }
     }
 //    public void paintClicked(View view) {
@@ -563,6 +624,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this, DangNhap.class);
                 startActivity(intent);
                 break;
+            case R.id.action_qmk:
+                QuenMk();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -619,15 +683,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         } else {
 
-            float ratioWidth = (float) bm.getWidth() / (float) iv.getWidth();
-            float ratioHeight = (float) bm.getHeight() / (float) iv.getHeight();
+//            float ratioWidth = (float) bm.getWidth() / (float) iv.getWidth();
+//            float ratioHeight = (float) bm.getHeight() / (float) iv.getHeight();
 
-            canvas.drawLine(
-                    x0 * ratioWidth,
-                    y0 * ratioHeight,
-                    x * ratioWidth,
-                    y * ratioHeight,
-                    paintDraw);
+            canvas.drawLine(downx, downy, upx, upy, paintDraw);
             imgPreview.invalidate();
         }
     }
@@ -642,18 +701,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageButton imgView = (ImageButton) view;
         String color = view.getTag().toString();
         paintDraw.setColor(Color.parseColor(color));
+        paint.setColor(Color.parseColor(color));
         imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
     }
     private void Save_Image()
     {
-        if (bitmapMaster != null) {
+//        if (bitmapMaster != null) {
+//            ContentValues contentValues = new ContentValues(3);
+//            contentValues.put(MediaStore.Audio.Media.DISPLAY_NAME, "Draw On Me");
+//
+//            Uri imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+//            try {
+//                OutputStream imageFileOS = getContentResolver().openOutputStream(imageFileUri);
+//                bitmapMaster.compress(Bitmap.CompressFormat.JPEG, 90, imageFileOS);
+//                Toast t = Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT);
+//                t.show();
+//
+//            } catch (Exception e) {
+//                Log.v("EXCEPTION", e.getMessage());
+//            }
+//        }
+        if (alteredBitmap != null) {
             ContentValues contentValues = new ContentValues(3);
             contentValues.put(MediaStore.Audio.Media.DISPLAY_NAME, "Draw On Me");
 
-            Uri imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+             imageFileUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
             try {
                 OutputStream imageFileOS = getContentResolver().openOutputStream(imageFileUri);
-                bitmapMaster.compress(Bitmap.CompressFormat.JPEG, 90, imageFileOS);
+                alteredBitmap.compress(Bitmap.CompressFormat.JPEG, 90, imageFileOS);
                 Toast t = Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT);
                 t.show();
 
@@ -664,15 +739,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void loadimage_userchoose()
     {
-                Intent intent = getIntent();
+        Intent intent = getIntent();
+        String url_image = intent.getStringExtra("name_image");
+        if(url_image != null) {
+            originalImage = BitmapUtils.getBitmapFromAssets(this, url_image + ".jpg", 0, 0);
+            finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
 
-                String url_image = intent.getStringExtra("name_image");
-                if(url_image != null) {
-                    originalImage = BitmapUtils.getBitmapFromAssets(this, url_image + ".jpg", 0, 0);
-                    finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
-                    imgPreview.setImageBitmap(originalImage);
-                }
+            imgPreview.setImageBitmap(originalImage);
+        }
 
     }
 
+    public boolean onTouch(View v, MotionEvent event) {
+        int action = event.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                downx = event.getX();
+                downy = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                upx = event.getX();
+                upy = event.getY();
+                canvas.drawLine(downx, downy, upx, upy, paint);
+                imgPreview.invalidate();
+                downx = upx;
+                downy = upy;
+                break;
+            case MotionEvent.ACTION_UP:
+                upx = event.getX();
+                upy = event.getY();
+                canvas.drawLine(downx, downy, upx, upy, paint);
+                imgPreview.invalidate();
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    private void QuenMk()
+    {
+        FirebaseUser tk = FirebaseAuth.getInstance().getCurrentUser();
+        String emaimk = tk.getEmail().toString();
+        myau.sendPasswordResetEmail(emaimk).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(MainActivity.this, "Đã gửi email đặt lại mật khẩu", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

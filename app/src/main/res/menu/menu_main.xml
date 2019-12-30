@@ -17,6 +17,12 @@
         android:id="@+id/action_dx"
         android:orderInCategory="101"
         android:title="Đăng xuất"
-        app:showAsAction="always" />
+        android:checkable="false" />
+    <item
+        android:id="@+id/action_qmk"
+        android:orderInCategory="101"
+        android:title="Quên mật khẩu"
+        android:checkable="false" />
+
 
 </menu>

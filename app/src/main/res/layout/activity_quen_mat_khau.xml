@@ -14,14 +14,21 @@
         android:layout_marginRight="50dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="100dp"
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="106dp"
             android:layout_gravity="center"
-            android:layout_marginTop="110dp"
-            android:text="MyApp"
-            android:textColor="@color/white"
-            android:textSize="80sp" />
+            android:layout_marginTop="45dp"
+            android:src="@drawable/paint_bg" />
+        <TextView
+
+            android:layout_width="296dp"
+            android:layout_marginTop="90dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="DẠY BÉ TẬP TÔ"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
         <TextView
             android:gravity="center"
             android:layout_marginTop="30dp"
@@ -29,7 +36,7 @@
             android:textStyle="italic"
             android:layout_width="match_parent"
             android:text="Nhập email bạn đã đăng ký"
-            android:textColor="@color/white"
+            android:textColor="@color/text"
             android:textSize="25sp"
             android:layout_height="wrap_content"/>
 
@@ -40,13 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/text"
             android:drawableLeft="@drawable/user"
             android:drawablePadding="10dp"
             android:ems="10"
             android:hint="Nhập email của bạn tại đây"
             android:inputType="textEmailAddress"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/text"
             android:textStyle="italic" />
 
         <Button
@@ -55,9 +62,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:background="@drawable/radiusbutton"
+            android:background="@color/bg_button"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/background"
+            android:drawableTint="@color/text"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
             android:text="Khôi phục mật khẩu"

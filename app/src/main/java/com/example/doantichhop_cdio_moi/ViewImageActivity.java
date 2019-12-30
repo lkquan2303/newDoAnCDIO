@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,8 +63,12 @@ public class ViewImageActivity extends AppCompatActivity implements ImageAdapter
 
 //        mDatabaseRef=FirebaseDatabase.getInstance().getReference("uploads");
         db = FirebaseDatabase.getInstance();
-        mDatabaseRef = db.getReference("uploads");
-        mRef = db.getReference("uploads");
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String name_image_storage = firebaseUser.getUid();
+        mDatabaseRef = db.getReference(name_image_storage);
+
+        mRef = db.getReference(name_image_storage);
         mDBlistener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

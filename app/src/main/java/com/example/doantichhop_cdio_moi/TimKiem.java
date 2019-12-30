@@ -84,7 +84,7 @@ public class TimKiem extends AppCompatActivity {
 //    }
 
     public void initList() {
-        items = new String[]{"cho","gau", "hoa", "meo", "tegiac", "tho", "voi", "chim"};
+        items = new String[]{"Con Chó","Gấu Trắng", "Hoa", "Con Mèo", "Tê Giác", "Thỏ", "Con Voi", "Con Chim"};
         listItems = new ArrayList<>(Arrays.asList(items));
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
